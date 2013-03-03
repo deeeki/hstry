@@ -8,9 +8,14 @@
   %body
     - flash.each do |type, message|
       %p= "#{type}: #{message}"
-    - if current_user
-      Logged in as:
-      = current_user.name
-      |
-      = link_to 'logout', :logout, method: :delete
     = yield
+
+    %hr
+    %footer
+      - if current_user
+        Logged in as:
+        = link_to current_user.name, :connections
+        |
+        = link_to 'logout', :logout, method: :delete
+        %br
+      = link_to 'HOME', '/'
