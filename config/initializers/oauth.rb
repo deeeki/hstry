@@ -10,3 +10,15 @@ Twitter.configure do |config|
   config.consumer_key = ENV['TWITTER_CONSUMER_KEY']
   config.consumer_secret = ENV['TWITTER_CONSUMER_SECRET']
 end
+
+
+module Foursquare2
+  module Users
+    def user_photos(options={})
+      response = connection.get do |req|
+        req.url "users/self/photos", options
+      end
+      return_error_or_body(response, response.body.response.photos)
+    end
+  end
+end

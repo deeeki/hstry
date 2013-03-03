@@ -48,6 +48,12 @@ class User < ActiveRecord::Base
     @tw = Twitter::Client.new(oauth_token: auth.token, oauth_token_secret: auth.secret)
   end
 
+  def fs
+    return @fs if @fs
+    auth = authentications.select{|a| a.provider == 'foursquare' }.first
+    @fs = Foursquare2::Client.new(oauth_token: auth.token, api_version: '20130303')
+  end
+
   def fetch_histories provider
     __send__(:"fetch_histories_from_#{provider}")
   end
@@ -88,6 +94,29 @@ class User < ActiveRecord::Base
           data: tweet.to_hash,
         })
       end
+    end
+  end
+
+  def fetch_histories_from_foursquare
+    fs.user_photos.items.each do |photo|
+      next unless photo.source.url.include?('foursquare')
+      next if History.find_by(uid: photo['id'])
+      image = "#{photo.prefix}#{photo.width}x#{photo.height}#{photo.suffix}"
+      histories.create({
+        uid: photo.id,
+        provider: 'foursquare',
+        text: '',
+        resource: 'photo',
+        image: image,
+        url: photo.venue.canonicalUrl,
+        location: {
+          name: photo.venue.name,
+          address: photo.venue.location.country,
+          latitude: photo.venue.location.lat,
+          longtitude: photo.venue.location.lng,
+        },
+        data: photo.to_hash,
+      })
     end
   end
 end
