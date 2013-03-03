@@ -1,3 +1,5 @@
+= link_to 'Fetch histories', histories_path, method: :post
+
 %h1 Listing histories
 
 %table
@@ -12,9 +14,6 @@
     %th Published at
     %th Location
     %th Data
-    %th
-    %th
-    %th
 
   - @histories.each do |history|
     %tr
@@ -28,10 +27,7 @@
       %td= history.published_at
       %td= history.location
       %td= history.data
-      %td= link_to 'Show', history
-      %td= link_to 'Edit', edit_history_path(history)
-      %td= link_to 'Destroy', history, :method => :delete, :data => { :confirm => 'Are you sure?' }
 
 %br
 
-= link_to 'New History', new_history_path
+= link_to 'clear histories', clear_histories_path, method: :delete

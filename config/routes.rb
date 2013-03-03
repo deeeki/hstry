@@ -1,6 +1,8 @@
 Hstry::Application.routes.draw do
   root 'histories#index'
-  resources :histories, only: [:create, :destroy]
+  resources :histories, only: [:create] do
+    delete 'clear', on: :collection
+  end
 
   get 'login' => 'sessions#new'
   get 'connections' => 'sessions#index'

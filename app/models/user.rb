@@ -34,4 +34,7 @@ class User < ActiveRecord::Base
       secret: auth.credentials.secret,
     })
   end
+
+  def fetch_histories
+  end
 end
