@@ -1,3 +1,10 @@
-%h1 Login
+- if current_user
+  %h1 Connect
+- else
+  %h1 Login
 
-= link_to 'with Foursquare', '/auth/foursquare'
+%ul
+  %li= link_to 'with Twitter', '/auth/twitter'
+  %li= link_to 'with Facebook', '/auth/facebook'
+  %li= link_to 'with Foursquare', '/auth/foursquare'
+  %li= link_to 'with Instagram', '/auth/instagram'
