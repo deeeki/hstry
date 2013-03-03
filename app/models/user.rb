@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   has_many :authentications
+  has_many :histories
 
   class << self
     def from_omniauth auth
@@ -35,6 +36,27 @@ class User < ActiveRecord::Base
     })
   end
 
+  def fb
+    return @fb if @fb
+    auth = authentications.select{|a| a.provider == 'facebook' }.first
+    @fb = Koala::Facebook::API.new(auth.token)
+  end
+
   def fetch_histories
+    album = fb.get_connections('me', 'albums').select{|a| a['name'] == 'Timeline Photos' }.first
+    return false unless album
+    fb.get_connections(album['id'], 'photos').each do |photo|
+      next if History.find_by(uid: photo['id'])
+      histories.create({
+        uid: photo['id'],
+        provider: 'facebook',
+        text: photo['name'],
+        resource: 'photo',
+        text: photo['name'],
+        image: photo['source'],
+        url: photo['link'],
+        data: photo,
+      })
+    end
   end
 end

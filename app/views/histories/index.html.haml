@@ -17,12 +17,12 @@
 
   - @histories.each do |history|
     %tr
-      %td= history.user
+      %td= history.user.name
       %td= history.uid
       %td= history.provider
       %td= history.resource
       %td= history.text
-      %td= history.image
+      %td= image_tag history.image
       %td= history.url
       %td= history.published_at
       %td= history.location
