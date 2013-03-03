@@ -42,7 +42,17 @@ class User < ActiveRecord::Base
     @fb = Koala::Facebook::API.new(auth.token)
   end
 
-  def fetch_histories
+  def tw
+    return @tw if @tw
+    auth = authentications.select{|a| a.provider == 'twitter' }.first
+    @tw = Twitter::Client.new(oauth_token: auth.token, oauth_token_secret: auth.secret)
+  end
+
+  def fetch_histories provider
+    __send__(:"fetch_histories_from_#{provider}")
+  end
+
+  def fetch_histories_from_facebook
     album = fb.get_connections('me', 'albums').select{|a| a['name'] == 'Timeline Photos' }.first
     return false unless album
     fb.get_connections(album['id'], 'photos').each do |photo|
@@ -52,11 +62,32 @@ class User < ActiveRecord::Base
         provider: 'facebook',
         text: photo['name'],
         resource: 'photo',
-        text: photo['name'],
         image: photo['source'],
         url: photo['link'],
         data: photo,
       })
+    end
+  end
+
+  def fetch_histories_from_twitter
+    max_id = nil
+    16.times do # retrieving limit is 200 * 16
+      tw.user_timeline({count: 200, max_id: max_id}.reject{|k,v| v.nil? }).each do |tweet|
+        max_id = tweet.id
+        next if tweet.media.empty?
+        next if tweet.retweet?
+        photo = tweet.media.first
+        next if History.find_by(uid: photo.id)
+        histories.create({
+          uid: photo.id,
+          provider: 'twitter',
+          text: tweet.text,
+          resource: 'photo',
+          image: photo.media_url,
+          url: photo.expanded_url,
+          data: tweet.to_hash,
+        })
+      end
     end
   end
 end

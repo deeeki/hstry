@@ -1,4 +1,7 @@
-= link_to 'Fetch histories', histories_path, method: :post
+%h1 Fetch histories
+%ul
+  - ['twitter', 'facebook', 'foursquare', 'instagram'].each do |provider|
+    %li= link_to "from #{provider.capitalize}", histories_path(provider: provider), method: :post
 
 %h1 Listing histories
 

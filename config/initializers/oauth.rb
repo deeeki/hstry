@@ -5,3 +5,8 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   provider :foursquare, ENV['FOURSQUARE_CLIENT_ID'], ENV['FOURSQUARE_CLIENT_SECRET']
   provider :instagram, ENV['INSTAGRAM_CLIENT_ID'], ENV['INSTAGRAM_CLIENT_SECRET']
 end
+
+Twitter.configure do |config|
+  config.consumer_key = ENV['TWITTER_CONSUMER_KEY']
+  config.consumer_secret = ENV['TWITTER_CONSUMER_SECRET']
+end

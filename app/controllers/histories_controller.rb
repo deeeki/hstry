@@ -6,7 +6,7 @@ class HistoriesController < ApplicationController
   end
 
   def create
-    if current_user.fetch_histories
+    if current_user.fetch_histories(params[:provider])
       redirect_to :root, notice: 'Fetched successfully'
     else
       redirect_to :root, alert: 'Fail to fetch'
