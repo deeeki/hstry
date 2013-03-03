@@ -13,6 +13,7 @@ gem 'omniauth-instagram'
 gem 'haml-rails'
 gem 'koala'
 gem 'twitter'
+gem 'foursquare2'
 
 group :assets do
   gem 'sass-rails',   '~> 4.0.0.beta1'
