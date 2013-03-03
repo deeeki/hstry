@@ -1,0 +1,8 @@
+%h1 Connections
+
+%ul
+  - ['twitter', 'facebook', 'foursquare', 'instagram'].each do |provider|
+    - if @authenticated_providers.include?(provider)
+      %li with #{provider.capitalize} &#x2713;
+    - else
+      %li= link_to "with #{provider.capitalize}", "/auth/#{provider}"
