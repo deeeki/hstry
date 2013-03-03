@@ -1,5 +1,7 @@
 Hstry::Application.routes.draw do
-  root 'sessions#new'
+  root 'histories#index'
+  resources :histories, only: [:create, :destroy]
+
   get 'login' => 'sessions#new'
   get 'connections' => 'sessions#index'
   get '/auth/:provider/callback' => 'sessions#create'

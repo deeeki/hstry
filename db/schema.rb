@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130302210957) do
+ActiveRecord::Schema.define(version: 20130303034631) do
 
   create_table "authentications", force: true do |t|
     t.integer  "user_id"
@@ -27,6 +27,24 @@ ActiveRecord::Schema.define(version: 20130302210957) do
   end
 
   add_index "authentications", ["user_id"], name: "index_authentications_on_user_id"
+
+  create_table "histories", force: true do |t|
+    t.integer  "user_id"
+    t.string   "uid"
+    t.string   "provider"
+    t.string   "resource"
+    t.string   "text"
+    t.string   "image"
+    t.string   "url"
+    t.datetime "published_at"
+    t.text     "location"
+    t.text     "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "histories", ["published_at"], name: "index_histories_on_published_at"
+  add_index "histories", ["user_id"], name: "index_histories_on_user_id"
 
   create_table "users", force: true do |t|
     t.string   "name"
