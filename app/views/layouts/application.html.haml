@@ -1,0 +1,14 @@
+!!!
+%html
+  %head
+    %title Hstry
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    = csrf_meta_tags
+  %body
+    - if current_user
+      Logged in as:
+      = current_user.name
+      |
+      = link_to 'logout', :logout, method: :delete
+    = yield
