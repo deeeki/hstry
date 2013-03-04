@@ -54,6 +54,12 @@ class User < ActiveRecord::Base
     @fs = Foursquare2::Client.new(oauth_token: auth.token, api_version: '20130303')
   end
 
+  def ig
+    return @ig if @ig
+    auth = authentications.select{|a| a.provider == 'instagram' }.first
+    @ig = Instagram.client(access_token: auth.token)
+  end
+
   def fetch_histories provider
     __send__(:"fetch_histories_from_#{provider}")
   end
@@ -115,6 +121,29 @@ class User < ActiveRecord::Base
           latitude: photo.venue.location.lat,
           longtitude: photo.venue.location.lng,
         },
+        data: photo.to_hash,
+      })
+    end
+  end
+
+  def fetch_histories_from_instagram
+    ig.user_recent_media(count: 40).each do |photo|
+      next if History.find_by(uid: photo['id'])
+      if photo.location
+        location = {
+          name: photo.location.name,
+          latitude: photo.location.latitude,
+          longtitude: photo.location.longitude,
+        }
+      end
+      histories.create({
+        uid: photo.id,
+        provider: 'instagram',
+        text: photo.text,
+        resource: 'image',
+        image: photo.images.standard_resolution.url,
+        url: photo.link,
+        location: location,
         data: photo.to_hash,
       })
     end
