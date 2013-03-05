@@ -2,6 +2,7 @@ class HistoriesController < ApplicationController
   before_action :require_login
 
   def index
+    @authenticated_providers = current_user.authentications.pluck(:provider)
     @histories = current_user.histories
   end
 

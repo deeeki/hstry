@@ -1,7 +1,10 @@
 %h1 Fetch histories
 %ul
   - ['twitter', 'facebook', 'foursquare', 'instagram'].each do |provider|
-    %li= link_to "from #{provider.capitalize}", histories_path(provider: provider), method: :post
+    - if @authenticated_providers.include?(provider)
+      %li= link_to "from #{provider.capitalize}", histories_path(provider: provider), method: :post
+    - else
+      %li= link_to "connect with #{provider.capitalize}", "/auth/#{provider}"
 
 %h1 Export
 %ul
