@@ -1,6 +1,6 @@
 Hstry::Application.routes.draw do
   root 'histories#index'
-  resources :histories, only: [:create] do
+  resources :histories, only: [:index, :create] do
     delete 'clear', on: :collection
   end
 

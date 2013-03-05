@@ -1,4 +1,5 @@
-json.array!(@histories) do |history|
-  json.extract! history, :user_id, :uid, :provider, :resource, :text, :image, :url, :published_at, :location, :data
-  json.url history_url(history, format: :json)
+json.user do
+  json.id current_user.id
+  json.name current_user.name
 end
+json.histories @histories, :uid, :provider, :resource, :text, :image, :url, :published_at, :location

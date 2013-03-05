@@ -3,6 +3,10 @@
   - ['twitter', 'facebook', 'foursquare', 'instagram'].each do |provider|
     %li= link_to "from #{provider.capitalize}", histories_path(provider: provider), method: :post
 
+%h1 Export
+%ul
+  %li= link_to 'to JSON', histories_path(format: 'json')
+
 %h1 Listing histories
 
 %table
@@ -31,6 +35,6 @@
       %td= history.location
       %td= history.data
 
-%br
-
-= link_to 'clear histories', clear_histories_path, method: :delete
+%h1 Manage
+%ul
+  %li= link_to 'clear histories', clear_histories_path, method: :delete
