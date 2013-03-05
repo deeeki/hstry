@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  before_action :require_login, only: [:index, :destroy]
+  before_action :require_login, only: [:index]
 
   def index
     @authenticated_providers = current_user.authentications.pluck(:provider)

@@ -8,5 +8,5 @@ Hstry::Application.routes.draw do
   get 'connections' => 'sessions#index'
   get '/auth/:provider/callback' => 'sessions#create'
   get '/auth/failure' => 'sessions#show'
-  delete 'logout' => 'sessions#destroy'
+  get 'logout' => 'sessions#destroy'
 end
