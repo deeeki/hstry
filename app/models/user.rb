@@ -106,25 +106,27 @@ class User < ActiveRecord::Base
   end
 
   def fetch_histories_from_foursquare
-    fs.user_photos.items.each do |photo|
+    fs.user_checkins(limit: 250).items.each do |checkin|
+      next if checkin.photos.count.zero? || checkin.photos.items.empty?
+      photo = checkin.photos.items.first
       next unless photo.source.url.include?('foursquare')
-      next if History.find_by(uid: photo.id)
+      next if History.find_by(uid: checkin.id)
       image = "#{photo.prefix}#{photo.width}x#{photo.height}#{photo.suffix}"
       histories.create({
-        uid: photo.id,
+        uid: checkin.id,
         provider: 'foursquare',
-        text: '',
-        resource: 'photo',
+        text: checkin.shout,
+        resource: 'checkin',
         image: image,
-        url: photo.venue.canonicalUrl,
-        published_at: Time.at(photo.createdAt),
+        url: checkin.venue.canonicalUrl,
+        published_at: Time.at(checkin.createdAt),
         location: {
-          name: photo.venue.name,
-          address: photo.venue.location.country,
-          latitude: photo.venue.location.lat,
-          longtitude: photo.venue.location.lng,
+          name: checkin.venue.name,
+          address: checkin.venue.location.country,
+          latitude: checkin.venue.location.lat,
+          longtitude: checkin.venue.location.lng,
         },
-        data: photo.to_hash,
+        data: checkin.to_hash,
       })
     end
   end
