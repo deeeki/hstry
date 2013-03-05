@@ -2,7 +2,7 @@ class HistoriesController < ApplicationController
   before_action :require_login
 
   def index
-    @histories = History.all
+    @histories = current_user.histories
   end
 
   def create

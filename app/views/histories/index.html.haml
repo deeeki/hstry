@@ -11,29 +11,23 @@
 
 %table
   %tr
-    %th User
-    %th Uid
     %th Provider
     %th Resource
     %th Text
     %th Image
-    %th Url
     %th Published at
     %th Location
-    %th Data
 
   - @histories.each do |history|
     %tr
-      %td= history.user.name
-      %td= history.uid
       %td= history.provider
       %td= history.resource
       %td= history.text
-      %td= image_tag history.image
-      %td= history.url
+      %td
+        = link_to history.url do
+          = image_tag history.image, size: '100x100'
       %td= history.published_at
       %td= history.location
-      %td= history.data
 
 %h1 Manage
 %ul
