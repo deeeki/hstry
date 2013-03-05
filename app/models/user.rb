@@ -76,6 +76,7 @@ class User < ActiveRecord::Base
         resource: 'photo',
         image: photo['source'],
         url: photo['link'],
+        published_at: photo['created_time'],
         data: photo,
       })
     end
@@ -97,6 +98,7 @@ class User < ActiveRecord::Base
           resource: 'photo',
           image: photo.media_url,
           url: photo.expanded_url,
+          published_at: tweet.created_at,
           data: tweet.to_hash,
         })
       end
@@ -106,7 +108,7 @@ class User < ActiveRecord::Base
   def fetch_histories_from_foursquare
     fs.user_photos.items.each do |photo|
       next unless photo.source.url.include?('foursquare')
-      next if History.find_by(uid: photo['id'])
+      next if History.find_by(uid: photo.id)
       image = "#{photo.prefix}#{photo.width}x#{photo.height}#{photo.suffix}"
       histories.create({
         uid: photo.id,
@@ -115,6 +117,7 @@ class User < ActiveRecord::Base
         resource: 'photo',
         image: image,
         url: photo.venue.canonicalUrl,
+        published_at: Time.at(photo.createdAt),
         location: {
           name: photo.venue.name,
           address: photo.venue.location.country,
@@ -128,7 +131,7 @@ class User < ActiveRecord::Base
 
   def fetch_histories_from_instagram
     ig.user_recent_media(count: 40).each do |photo|
-      next if History.find_by(uid: photo['id'])
+      next if History.find_by(uid: photo.id)
       if photo.location
         location = {
           name: photo.location.name,
@@ -139,10 +142,11 @@ class User < ActiveRecord::Base
       histories.create({
         uid: photo.id,
         provider: 'instagram',
-        text: photo.text,
+        text: photo.caption.text,
         resource: 'image',
         image: photo.images.standard_resolution.url,
         url: photo.link,
+        published_at: Time.at(photo.created_time.to_i),
         location: location,
         data: photo.to_hash,
       })
